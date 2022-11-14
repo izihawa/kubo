@@ -261,3 +261,5 @@ require (
 )
 
 go 1.18
+
+replace github.com/ipfs/go-namesys => /Users/pasha/go-namesys

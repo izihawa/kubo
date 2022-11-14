@@ -3,6 +3,7 @@ package coreapi
 import (
 	"context"
 	"fmt"
+	"time"
 	gopath "path"
 
 	"github.com/ipfs/go-namesys/resolve"
@@ -17,8 +18,10 @@ import (
 	ipfspath "github.com/ipfs/go-path"
 	ipfspathresolver "github.com/ipfs/go-path/resolver"
 	coreiface "github.com/ipfs/interface-go-ipfs-core"
+	nsopt "github.com/ipfs/interface-go-ipfs-core/options/namesys"
 	path "github.com/ipfs/interface-go-ipfs-core/path"
 )
+
 
 // ResolveNode resolves the path `p` using Unixfs resolver, gets and returns the
 // resolved Node.
@@ -52,7 +55,7 @@ func (api *CoreAPI) ResolvePath(ctx context.Context, p path.Path) (path.Resolved
 	}
 
 	ipath := ipfspath.Path(p.String())
-	ipath, err := resolve.ResolveIPNS(ctx, api.namesys, ipath)
+	ipath, err := resolve.ResolveIPNS(ctx, api.namesys, ipath, nsopt.DhtTimeout(5 * time.Second))
 	if err == resolve.ErrNoNamesys {
 		return nil, coreiface.ErrOffline
 	} else if err != nil {
